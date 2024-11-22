@@ -4,13 +4,13 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import dev.emrx.thanksgiving.infra.exception.ValidationIntegrity;
+import dev.emrx.thanksgiving.infra.validation.DataErrorValidation;
 import jakarta.validation.ValidationException;
 
 @RestControllerAdvice
@@ -36,14 +36,6 @@ public class GlobalExceptionsConfig {
   @ExceptionHandler(ValidationException.class)
   public ResponseEntity<String> handleValidationException(ValidationException ex) {
       return ResponseEntity.badRequest().body(ex.getMessage());
-  }
-
-  private record DataErrorValidation(String field, String error) {
-
-      public DataErrorValidation(FieldError error) {
-          this(error.getField(), error.getDefaultMessage());
-      }
-
   }
 
 }
