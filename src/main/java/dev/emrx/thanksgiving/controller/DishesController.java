@@ -4,6 +4,8 @@ import dev.emrx.thanksgiving.domain.CreateDishRequest;
 import dev.emrx.thanksgiving.domain.DishResponse;
 import dev.emrx.thanksgiving.domain.UpdateDishRequest;
 import dev.emrx.thanksgiving.service.DishesService;
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +23,7 @@ public class DishesController {
     private DishesService dishesService;
 
     @PostMapping
-    public ResponseEntity<DishResponse> createDish(@RequestBody CreateDishRequest request, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<DishResponse> createDish(@RequestBody @Valid CreateDishRequest request, UriComponentsBuilder uriBuilder) {
         DishResponse createdDish = dishesService.createDish(request);
         if (createdDish != null) {
             URI location = uriBuilder.path("/dishes/{id}").buildAndExpand(createdDish.id()).toUri();

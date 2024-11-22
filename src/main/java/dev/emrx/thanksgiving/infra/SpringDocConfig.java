@@ -23,8 +23,8 @@ public class SpringDocConfig {
                         .version("1.0.0")
                 )
                 .servers(List.of(
-                    new Server().url("http://api.thanksgiving-dinner.com/v1").description("Production server"),
-                    new Server().url("http://staging-api.thanksgiving-dinner.com/v1").description("Staging server")
+                    new Server().url("http://localhost:8080").description("Staging server"),
+                    new Server().url("http://api.thanksgiving-dinner.com/v1").description("Production server")                    
                 ));
                 // .tags(List.of(
                 //     new Tag().name("dishes").description("Operations related to dinner dishes")
