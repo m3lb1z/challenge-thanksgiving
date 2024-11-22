@@ -1,0 +1,309 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Thanksgiving Shared Dinner API",
+    "description": "RESTful API for organizing dishes in a shared Thanksgiving dinner",
+    "contact": {
+      "name": "Development Team"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Staging server"
+    },
+    {
+      "url": "http://api.thanksgiving-dinner.com/v1",
+      "description": "Production server"
+    }
+  ],
+  "paths": {
+    "/dishes/{id}": {
+      "get": {
+        "tags": ["dishes-controller"],
+        "summary": "Obtener un plato por ID",
+        "description": "Devuelve un plato específico por su ID",
+        "operationId": "getDishById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Plato encontrado",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/DishResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Plato no encontrado"
+          }
+        }
+      },
+      "put": {
+        "tags": ["dishes-controller"],
+        "summary": "Actualizar un plato",
+        "description": "Actualiza un plato existente por su ID",
+        "operationId": "updateDish",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateDishRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Plato actualizado",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/DishResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Plato no encontrado",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataErrorValidation"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["dishes-controller"],
+        "summary": "Eliminar un plato",
+        "description": "Elimina un plato existente por su ID",
+        "operationId": "deleteDish",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Plato eliminado"
+          },
+          "404": {
+            "description": "Plato no encontrado"
+          }
+        }
+      }
+    },
+    "/dishes": {
+      "get": {
+        "tags": ["dishes-controller"],
+        "summary": "Obtener todos los platos",
+        "description": "Devuelve una lista de todos los platos",
+        "operationId": "getAllDishes",
+        "responses": {
+          "200": {
+            "description": "Lista de platos obtenida",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DishResponse"
+                  }
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No hay contenido"
+          }
+        }
+      },
+      "post": {
+        "tags": ["dishes-controller"],
+        "summary": "Crear un plato",
+        "description": "Crea un nuevo plato para la cena de Acción de Gracias",
+        "operationId": "createDish",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDishRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Plato creado",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/DishResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Solicitud inválida",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataErrorValidation"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "UpdateDishRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "description": "El nombre del plato",
+            "example": "Honey Glazed Ham"
+          },
+          "foodType": {
+            "pattern": "APERITIVO|PLATO_PRINCIPAL|GUARNICION|POSTRE|BEBIDA",
+            "type": "string",
+            "description": "El tipo de comida del plato",
+            "example": "PLATO_PRINCIPAL"
+          },
+          "chef": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "description": "El nombre del chef que prepara el plato",
+            "example": "Bobby Flay"
+          },
+          "description": {
+            "maxLength": 1000,
+            "minLength": 0,
+            "type": "string",
+            "description": "Descripción detallada del plato",
+            "example": "Jamón glaseado con miel y mostaza, decorado con clavos de olor"
+          }
+        },
+        "description": "Objeto que representa una solicitud para actualizar un plato"
+      },
+      "DataErrorValidation": {
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string"
+          },
+          "error": {
+            "type": "string"
+          }
+        }
+      },
+      "DishResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "El ID único del plato",
+            "format": "uuid",
+            "example": "7001fa2e-5dd2-4c53-8d0d-f5e0bb8ef97f"
+          },
+          "name": {
+            "type": "string",
+            "description": "El nombre del plato",
+            "example": "Traditional Roast Turkey"
+          },
+          "foodType": {
+            "type": "string",
+            "description": "El tipo de comida del plato",
+            "example": "PLATO_PRINCIPAL"
+          },
+          "chef": {
+            "type": "string",
+            "description": "El nombre del chef que prepara el plato",
+            "example": "Julia Child"
+          },
+          "description": {
+            "type": "string",
+            "description": "Descripción detallada del plato",
+            "example": "Pavo asado clásico relleno con hierbas aromáticas y mantequilla"
+          }
+        },
+        "description": "Objeto que representa la respuesta de un plato"
+      },
+      "CreateDishRequest": {
+        "required": ["chef", "foodType", "name"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "description": "El nombre del plato",
+            "example": "Deviled Eggs"
+          },
+          "foodType": {
+            "pattern": "APERITIVO|PLATO_PRINCIPAL|GUARNICION|POSTRE|BEBIDA",
+            "type": "string",
+            "description": "El tipo de comida del plato",
+            "example": "APERITIVO"
+          },
+          "chef": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "description": "El nombre del chef que prepara el plato",
+            "example": "Martha Stewart"
+          },
+          "description": {
+            "maxLength": 1000,
+            "minLength": 0,
+            "type": "string",
+            "description": "Descripción detallada del plato",
+            "example": "Huevos rellenos tradicionales con mayonesa, mostaza y pimentón"
+          }
+        },
+        "description": "Objeto que representa una solicitud para crear un plato"
+      }
+    }
+  }
+}
