@@ -5,6 +5,7 @@ import dev.emrx.thanksgiving.domain.DishResponse;
 import dev.emrx.thanksgiving.domain.UpdateDishRequest;
 import dev.emrx.thanksgiving.model.Dishes;
 import dev.emrx.thanksgiving.repository.DishesRepository;
+import jakarta.transaction.Transactional;
 import dev.emrx.thanksgiving.mapper.DishMapper;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,7 @@ public class DishesService {
         return dishesRepository.findById(id).orElse(null);
     }
 
+    @Transactional
     public DishResponse createDish(CreateDishRequest request) {
         Dishes dish = dishMapper.toEntity(request);
         Dishes savedDish = dishesRepository.save(dish);
@@ -43,6 +45,7 @@ public class DishesService {
         return dish != null ? dishMapper.toResponse(dish) : null;
     }
 
+    @Transactional
     public DishResponse updateDish(UUID id, UpdateDishRequest request) {
         Dishes dish = _getDishById(id);
         if (dish != null) {
@@ -53,6 +56,7 @@ public class DishesService {
         return null;
     }
 
+    @Transactional
     public void deleteDish(UUID id) {
         dishesRepository.deleteById(id);
     }
