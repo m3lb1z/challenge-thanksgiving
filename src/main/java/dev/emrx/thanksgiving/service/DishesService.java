@@ -1,8 +1,11 @@
 package dev.emrx.thanksgiving.service;
 
+import dev.emrx.thanksgiving.domain.CreateDishRequest;
+import dev.emrx.thanksgiving.domain.DishResponse;
+import dev.emrx.thanksgiving.domain.UpdateDishRequest;
 import dev.emrx.thanksgiving.model.Dishes;
 import dev.emrx.thanksgiving.repository.DishesRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import dev.emrx.thanksgiving.mapper.DishMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,29 +14,41 @@ import java.util.UUID;
 @Service
 public class DishesService {
 
-    @Autowired
-    private DishesRepository dishesRepository;
+    private final DishesRepository dishesRepository;
+    private final DishMapper dishMapper;
 
-    public Dishes createDish(Dishes dish) {
-        return dishesRepository.save(dish);
+    public DishesService(DishesRepository dishesRepository, DishMapper dishMapper) {
+        this.dishesRepository = dishesRepository;
+        this.dishMapper = dishMapper;
     }
 
-    public List<Dishes> getAllDishes() {
-        return dishesRepository.findAll();
-    }
-
-    public Dishes getDishById(UUID id) {
+    private Dishes _getDishById(UUID id) {
         return dishesRepository.findById(id).orElse(null);
     }
 
-    public Dishes updateDish(UUID id, Dishes dishDetails) {
-        Dishes dish = getDishById(id);
+    public DishResponse createDish(CreateDishRequest request) {
+        Dishes dish = dishMapper.toEntity(request);
+        Dishes savedDish = dishesRepository.save(dish);
+        return dishMapper.toResponse(savedDish);
+    }
+
+    public List<DishResponse> getAllDishes() {
+        return dishesRepository.findAll().stream()
+                .map(dishMapper::toResponse)
+                .toList();
+    }
+
+    public DishResponse getDishById(UUID id) {
+        Dishes dish = _getDishById(id);
+        return dish != null ? dishMapper.toResponse(dish) : null;
+    }
+
+    public DishResponse updateDish(UUID id, UpdateDishRequest request) {
+        Dishes dish = _getDishById(id);
         if (dish != null) {
-            dish.setName(dishDetails.getName());
-            dish.setFoodType(dishDetails.getFoodType());
-            dish.setChef(dishDetails.getChef());
-            dish.setDescription(dishDetails.getDescription());
-            return dishesRepository.save(dish);
+            dish = dishMapper.updateEntity(dish, request);
+            Dishes updatedDish = dishesRepository.save(dish);
+            return dishMapper.toResponse(updatedDish);
         }
         return null;
     }

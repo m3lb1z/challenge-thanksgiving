@@ -1,6 +1,8 @@
 package dev.emrx.thanksgiving.controller;
 
-import dev.emrx.thanksgiving.model.Dishes;
+import dev.emrx.thanksgiving.domain.CreateDishRequest;
+import dev.emrx.thanksgiving.domain.DishResponse;
+import dev.emrx.thanksgiving.domain.UpdateDishRequest;
 import dev.emrx.thanksgiving.service.DishesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,10 +21,10 @@ public class DishesController {
     private DishesService dishesService;
 
     @PostMapping
-    public ResponseEntity<Dishes> createDish(@RequestBody Dishes dish, UriComponentsBuilder uriBuilder) {
-        Dishes createdDish = dishesService.createDish(dish);
+    public ResponseEntity<DishResponse> createDish(@RequestBody CreateDishRequest request, UriComponentsBuilder uriBuilder) {
+        DishResponse createdDish = dishesService.createDish(request);
         if (createdDish != null) {
-            URI location = uriBuilder.path("/dishes/{id}").buildAndExpand(createdDish.getId()).toUri();
+            URI location = uriBuilder.path("/dishes/{id}").buildAndExpand(createdDish.id()).toUri();
             return ResponseEntity.created(location).body(createdDish);
         } else {
             return ResponseEntity.badRequest().build();
@@ -30,13 +32,13 @@ public class DishesController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Dishes>> getAllDishes() {
+    public ResponseEntity<List<DishResponse>> getAllDishes() {
         return ResponseEntity.ok(dishesService.getAllDishes());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Dishes> getDishById(@PathVariable UUID id) {
-        Dishes dish = dishesService.getDishById(id);
+    public ResponseEntity<DishResponse> getDishById(@PathVariable UUID id) {
+        DishResponse dish = dishesService.getDishById(id);
         if (dish != null) {
             return ResponseEntity.ok(dish);
         } else {
@@ -45,8 +47,8 @@ public class DishesController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Dishes> updateDish(@PathVariable UUID id, @RequestBody Dishes dishDetails) {
-        Dishes updatedDish = dishesService.updateDish(id, dishDetails);
+    public ResponseEntity<DishResponse> updateDish(@PathVariable UUID id, @RequestBody UpdateDishRequest request) {
+        DishResponse updatedDish = dishesService.updateDish(id, request);
         if (updatedDish != null) {
             return ResponseEntity.ok(updatedDish);
         } else {
