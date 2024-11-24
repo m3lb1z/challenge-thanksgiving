@@ -1,4 +1,4 @@
-package dev.emrx.thanksgiving.infra;
+package dev.emrx.thanksgiving.infra.exception;
 
 import java.util.List;
 
@@ -9,12 +9,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
-import dev.emrx.thanksgiving.infra.exception.ValidationIntegrity;
-import dev.emrx.thanksgiving.infra.validation.DataErrorValidation;
 import jakarta.validation.ValidationException;
 
 @RestControllerAdvice
-public class GlobalExceptionsConfig {
+public class GlobalExceptionsHandlers {
   
   @ExceptionHandler(NoResourceFoundException.class)
   public ResponseEntity<String> handleError404() {

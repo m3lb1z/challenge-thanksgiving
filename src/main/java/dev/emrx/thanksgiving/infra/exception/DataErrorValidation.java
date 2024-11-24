@@ -1,4 +1,4 @@
-package dev.emrx.thanksgiving.infra.validation;
+package dev.emrx.thanksgiving.infra.exception;
 
 import org.springframework.validation.FieldError;
 

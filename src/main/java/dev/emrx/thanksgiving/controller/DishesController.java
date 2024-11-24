@@ -3,7 +3,7 @@ package dev.emrx.thanksgiving.controller;
 import dev.emrx.thanksgiving.domain.CreateDishRequest;
 import dev.emrx.thanksgiving.domain.DishResponse;
 import dev.emrx.thanksgiving.domain.UpdateDishRequest;
-import dev.emrx.thanksgiving.infra.validation.DataErrorValidation;
+import dev.emrx.thanksgiving.infra.exception.DataErrorValidation;
 import dev.emrx.thanksgiving.service.DishesService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
