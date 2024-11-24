@@ -76,7 +76,8 @@ public class DishesController {
     @Operation(summary = "Actualizar un plato", description = "Actualiza un plato existente por su ID")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Plato actualizado"),
-        @ApiResponse(responseCode = "404", description = "Plato no encontrado", content = @Content(schema = @Schema(implementation = DataErrorValidation.class)))
+        @ApiResponse(responseCode = "404", description = "Plato no encontrado", content = @Content(schema = @Schema(implementation = Void.class))),
+        @ApiResponse(responseCode = "400", description = "Solicitud inválida", content = @Content(schema = @Schema(implementation = DataErrorValidation.class)))
     })
     @PutMapping("/{id}")
     public ResponseEntity<DishResponse> updateDish(@PathVariable UUID id, @RequestBody @Valid UpdateDishRequest request) {
